@@ -1,39 +1,39 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.22;
 
 /**
  * The Election contract assure the voting process.
  */
 contract Election {
-	struct Candidate {
-		uint id;
-		string name;
-		uint voteCount;
-	}
+    struct Candidate {
+        uint id;
+        string name;
+        uint voteCount;
+    }
 
-	mapping (uint => Candidate) public candidates;
-	mapping (address => bool) voters;
-	
-	uint public candidatesCount;
+    mapping (uint => Candidate) public candidates;
+    uint public candidatesCount;
+    mapping (address => bool) public voters;
 
-	constructor () public  {
-		addCandidate("Candidate 1");
-		addCandidate("Candidate 2");
-	}	
+    constructor () public  {
+        addCandidate("Candidate 1");
+        addCandidate("Candidate 2");
+    }	
 
-	function addCandidate (string name) private {
-		candidatesCount++;
-		Candidate memory candidate = Candidate(candidatesCount, name, 0);
-		candidates[candidatesCount] = candidate;
-	}
-	
-	function vote (uint candidateId) public {
-		require (!voters[msg.vote]);
-		require (candidateId >0 && candidateId <= candidatesCount);
+    function addCandidate (string _name) private {
+        candidatesCount++;
+        candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    }
+    
+    function vote (uint candidateId) public {
+        // msg.sender it is a global variable
+        require (!voters[msg.sender], "Already voted.");
+        // check the candidate exists
+        require (candidateId > 0 && candidateId <= candidatesCount, "Candidate not exists");
 
-		voters[msg.sender] = true;
-
-		candidates[candidateId].voteCount ++;
-		
-	}
-	
+        // record the vote
+        voters[msg.sender] = true;
+        // update the candidates vote count
+        candidates[candidateId].voteCount ++;
+    }
+    
 }
