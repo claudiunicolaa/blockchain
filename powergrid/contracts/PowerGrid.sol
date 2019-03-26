@@ -15,7 +15,7 @@ contract PowerGrid {
 	mapping (address => uint) public balances;
 
 	constructor() public {
-		energyCount = 0;
+		energyCount = 100;
 	}
 	
 	function putEnergy(uint amount) public {
