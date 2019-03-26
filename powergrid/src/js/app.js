@@ -56,7 +56,6 @@ App = {
     });
   },
 
-
   put: () => {
     let amount = $('#putAmount').val();
     App.contracts.PowerGrid.deployed().then((instance) => {
@@ -73,14 +72,25 @@ App = {
   retrieve: () => {
     let amount = $('#retrieveAmount').val();
     App.contracts.PowerGrid.deployed().then((instance) => {
-      instance.retrieveEnergy(amount, {
+      return instance.retrieveEnergy(amount, {
         from: App.account
       });
+    }).then(() => {
       App.loadAccount();
       App.setUnits();
+      App.hideErrDiv('errorRetrieveAmount');
     }).catch((err) => {
-      console.log(err.message);
+      const errMessage = err.message.replace('VM Exception while processing transaction: revert', '');
+      App.showErrDiv('errorRetrieveAmount', errMessage);
     });
+  },
+
+  showErrDiv: (id, errMessage) => {
+    $(`#${id}`).html(errMessage).removeClass("hide").hide().fadeIn("slow");
+  },
+
+  hideErrDiv: (id) => {
+    $(`#${id}`).addClass("hide").fadeOut("slow");
   }
 };
 

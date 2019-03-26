@@ -24,7 +24,8 @@ contract PowerGrid {
 	}
 
 	function retrieveEnergy(uint amount) public {
-		require(energyCount >= amount && balances[msg.sender] >= calculateNumberOfTokens(amount));
+		require(energyCount >= amount, 'Amount exceds the energy stored into PowerGrid right now.');
+		require(balances[msg.sender] >= calculateNumberOfTokens(amount), 'Amount exceds your current balance.');
 		energyCount -= amount;
 		balances[msg.sender] -= calculateNumberOfTokens(amount);
 	}
